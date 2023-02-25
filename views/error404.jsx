@@ -13,4 +13,4 @@ function error404 () {
   }
   
 
-module.exports = 404
+module.exports = error404

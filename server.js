@@ -31,6 +31,6 @@ app.listen(PORT, () => {
 
 // 404 Page
 app.get('*', (req, res) => {
-  res.send('404')
+  res.render('error404')
 })
 
