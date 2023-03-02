@@ -1,6 +1,8 @@
 // DEPENDENCIES
 const express = require('express')
 const methodOverride = require('method-override')
+const mongoose = require('mongoose')
+
 
 // CONFIGURATION
 require('dotenv').config()
@@ -15,6 +17,16 @@ app.use(express.urlencoded({extended: true}))
 app.use(express.static('public'))
 app.use(methodOverride('_method'))
 
+mongoose.connect(process.env.MONGO_URI, 
+  {
+    useNewUrlParser: true, 
+    useUnifiedTopology: true
+  }).then(() => {
+    console.log('connected to mongo: ', process.env.MONGO_URI);
+  }).catch((err) => {
+    console.error('Error connecting to MongoDB:', err);
+  });
+  
 // ROUTES
 app.get('/', (req, res) => {
     res.send('Welcome to an Awesome App about Breads')
