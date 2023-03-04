@@ -29,7 +29,7 @@ breads.get('/:id', (req, res) => {
       })
     })
     .catch(err => {
-      res.send('404')
+      res.send('error404')
     })
 })
 
