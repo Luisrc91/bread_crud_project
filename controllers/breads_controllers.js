@@ -1,6 +1,9 @@
 const express = require('express')
 const breads = express.Router()
 const Bread = require('../models/breads.js')
+// somewhere at the top with the other dependencies 
+const Baker = require('../models/baker.js')
+
 
 // INDEX
 breads.get('/', (req, res) => {
@@ -15,14 +18,21 @@ breads.get('/', (req, res) => {
 
 
 
-// NEW
+// in the new route
 breads.get('/new', (req, res) => {
-  res.render('new')
+  Baker.find()
+      .then(foundBakers => {
+          res.render('new', {
+              bakers: foundBakers
+          })
+    })
 })
+
 
 // SHOW
 breads.get('/:id', (req, res) => {
   Bread.findById(req.params.id)
+      .populate('baker')
       .then(foundBread => {
         const bakedBy = foundBread.getBakedBy() 
         console.log(bakedBy)
@@ -30,24 +40,27 @@ breads.get('/:id', (req, res) => {
             bread: foundBread
         })
       })
-    
-
-    // .catch(err => {
-    //   res.send('error404')
-    // })
+      .catch(err => {
+        res.send('404')
+      })
 })
 
 
 
 // EDIT
 breads.get('/:id/edit', (req, res) => {
-  Bread.findById(req.params.id) 
-    .then(foundBread => { 
-      res.render('edit', {
-        bread: foundBread 
+    Baker.find()
+      .then(foundBakers => {
+          Bread.findById(req.params.id)
+            .then(foundBread => {
+              res.render('edit', {
+                  bread: foundBread, 
+                  bakers: foundBakers 
+              })
+            })
       })
-    })
-})
+  })
+  
 
 
 // UPDATE
@@ -125,3 +138,6 @@ breads.get('/data/seed', (req, res) => {
 
 
 module.exports = breads
+
+
+
